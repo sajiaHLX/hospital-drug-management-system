@@ -32,7 +32,6 @@ router.post('/', function (req, res, next) {
         res.send(data);
         return;
       } else {
-        console.log(result)
         data.meta.status = 200
         data.data.total = result.length
         data.data.users = result.splice((pagenum - 1) * pagesize, pagesize)
@@ -61,6 +60,62 @@ router.post('/', function (req, res, next) {
 
   connection.end();
 });
+
+// 获取日志操作列表
+router.post('/log', function (req, res, next) {
+  let query = req.body.params.query
+  let pagenum = req.body.params.pagenum
+  let pagesize = req.body.params.pagesize
+  var connection = mysql.createConnection(sql_connect);
+  connection.connect();
+  var sql = 'SELECT * FROM medicine.editlog';
+  let data = {
+    meta: {
+      status: 200
+    },
+    data: {
+      total: 0
+    }
+  }
+  //查
+  if (query == '') {
+    connection.query(sql, function (err, result) {
+      if (err) {
+        console.log(err)
+        data.meta.status = 500
+        // data.data.users = result
+        // console.log(req.query)
+        res.send(data);
+        return;
+      } else {
+        console.log(result)
+        data.meta.status = 200
+        data.data.total = result.length
+        data.data.users = result.splice((pagenum - 1) * pagesize, pagesize)
+        res.send(data);
+      }
+    });
+  } else {
+    connection.query(`${sql} WHERE user = "${query}"`, function (err, result) {
+      if (err) {
+        console.log(err)
+        data.meta.status = 500
+        // data.data.users = result
+        // console.log(req.query)
+        res.send(data);
+        return;
+      } else {
+        console.log(result)
+        data.meta.status = 200
+        data.data.total = result.length
+        data.data.users = result.splice((pagenum - 1) * pagesize, pagesize)
+        res.send(data);
+      }
+    });
+  }
+  connection.end();
+});
+
 // 获取入库列表
 router.post('/in', function (req, res, next) {
   let query = req.body.params.query
@@ -114,6 +169,7 @@ router.post('/in', function (req, res, next) {
   }
   connection.end();
 });
+
 // 药品入库
 router.put('/in', function (req, res, next) {
   let code = req.body.code
@@ -152,7 +208,7 @@ router.put('/in', function (req, res, next) {
       } else {
         if (result.length !== 0) {
           oldNum = result[0].number
-          sql2 = `UPDATE medicine SET number = '${oldNum*1 + number*1}' WHERE code = ${code}`
+          sql2 = `UPDATE medicine SET number = '${oldNum * 1 + number * 1}' WHERE code = ${code}`
           resolve(sql2)
         } else {
           sql2 = 'INSERT INTO medicine(code,name,number,unit,d_price,j_price) VALUES(?,?,?,?,?,?)'
@@ -199,6 +255,7 @@ router.put('/in', function (req, res, next) {
   });
   // connection.end();
 })
+
 // 获取出库列表
 router.post('/out', function (req, res, next) {
   let query = req.body.params.query
@@ -250,6 +307,7 @@ router.post('/out', function (req, res, next) {
     });
   }
 });
+
 // 药品出库
 router.put('/out', function (req, res, next) {
   let code = req.body.code
@@ -285,7 +343,7 @@ router.put('/out', function (req, res, next) {
           if (oldNum * 1 - number * 1 < 0) {
             reject("库存不足")
           }
-          sql2 = `UPDATE medicine SET number = '${oldNum*1 - number*1}' WHERE code = ${code}`
+          sql2 = `UPDATE medicine SET number = '${oldNum * 1 - number * 1}' WHERE code = ${code}`
           resolve(sql2)
         } else {
           reject("请检查药品编号是否正确！")
@@ -324,6 +382,7 @@ router.put('/out', function (req, res, next) {
   })
   // connection.end();
 })
+
 // 查询药品名称
 router.get('/', function (req, res, next) {
   let code = req.query.code
@@ -355,6 +414,7 @@ router.get('/', function (req, res, next) {
   });
   connection.end();
 });
+
 // 药品采购
 router.get('/buy', function (req, res, next) {
   let query = req.query.query
@@ -399,6 +459,7 @@ router.get('/buy', function (req, res, next) {
     });
   }
 })
+
 // 更新药品库存
 router.post('/buy', function (req, res, next) {
   let data = {
@@ -431,6 +492,7 @@ router.post('/buy', function (req, res, next) {
 
   // connection.end();
 })
+
 // 修改药品库存
 router.put('/buy', function (req, res, next) {
   let data = {
@@ -463,6 +525,7 @@ router.put('/buy', function (req, res, next) {
 
   // connection.end();
 })
+
 // 数据错误时修改药品库存
 router.post('/medicineEdit', function (req, res, next) {
   let data = {
@@ -476,13 +539,27 @@ router.post('/medicineEdit', function (req, res, next) {
   let code = req.body.params.code
   let item = req.body.params.editItem
   let value = req.body.params.editValue
+  let name = req.body.params.name
+  let editItem = ''
+  switch (req.body.params.editItem) {
+    case 'number':
+      editItem = '药品数量'
+      break;
+    case 'name':
+      editItem = '药品名称'
+      break;
+    case 'd_price':
+      editItem = '单价'
+      break;
+  }
+  let old = req.body.params.old
+  let user = req.body.params.user
+  let date = req.body.params.date
+  let arry = [code, name, editItem, old, value, user, date]
+
   var connection = mysql.createConnection(sql_connect);
   connection.connect();
   let sql = `UPDATE medicine.medicine SET ${item} = '${value}' WHERE code = ${code}`;
-  // let addForm = []
-  // for (const iterator of Object.values(req.body)) {
-  //   addForm.push(iterator)
-  // }
   // 修改药品库存
   connection.query(sql, function (err, result) {
     if (err) {
@@ -490,10 +567,20 @@ router.post('/medicineEdit', function (req, res, next) {
       data.meta.status = 500
       res.send(data)
     } else {
-      data.meta.status = 200
-      res.send(data)
+      let sql1 = 'INSERT INTO medicine.editlog(code,name,edititem,old,new,user,date) VALUES(?,?,?,?,?,?,?)'
+      connection.query(sql1, arry, function (err, result) {
+        if (err) {
+          console.log(err)
+          data.meta.status = 500
+          res.send(data)
+        } else {
+          data.meta.status = 200
+          res.send(data)
+        }
+      })
     }
   });
+
 
   // connection.end();
 })

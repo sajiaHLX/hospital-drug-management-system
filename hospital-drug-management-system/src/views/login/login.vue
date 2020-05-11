@@ -62,14 +62,6 @@ export default {
       this.$refs.loginFormRef.resetFields();
     },
     async login() {
-      // if(this.loginForm.username == "admin" && this.loginForm.password == "123456"){
-      //   this.$message({
-      //     message: '成功登录',
-      //     type: 'success'
-      //   });
-      //   window.sessionStorage.setItem('isLogin', true)
-      //   this.$router.push('/home')
-      // }
       this.$refs.loginFormRef.validate(async valid => {
         if (valid) {
           const { data: res } = await this.$http.post("/login", this.loginForm);
