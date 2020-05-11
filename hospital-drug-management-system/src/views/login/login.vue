@@ -24,6 +24,17 @@
             v-model="loginForm.password"
           ></el-input>
         </el-form-item>
+        <!-- 验证码 -->
+        <el-form-item prop="captcha">
+          <el-input
+            placeholder="请输入答案"
+            type="number"
+            prefix-icon="iconfont icon-icon_password"
+            v-model="loginForm.captcha"
+          >
+            <template slot="prepend">{{captcha}}</template>
+          </el-input>
+        </el-form-item>
         <!-- 按钮 -->
         <el-form-item class="btns">
           <el-button type="primary" @click="login">登录</el-button>
@@ -41,8 +52,10 @@ export default {
       // 登录数据绑定
       loginForm: {
         username: "hlxhlx",
-        password: "123456"
+        password: "123456",
+        captcha: ""
       },
+      captcha: "",
       // 表单验证规则
       loginFormRules: {
         username: [
@@ -52,11 +65,24 @@ export default {
         password: [
           { required: true, message: "请输入账号密码", trigger: "blur" },
           { min: 6, max: 15, message: "长度在 6 到 15 个字符", trigger: "blur" }
-        ]
+        ],
+        captcha: [{ required: true, message: "请输入答案", trigger: "blur" }]
       }
     };
   },
+  beforeMount () {
+    this.getCaptcha()
+  },
   methods: {
+    // 获取验证码
+    async getCaptcha(){
+      const { data: res } = await this.$http.get("/captcha");
+      if(res.meta.status !== 200){
+        this.$message.error('获取验证码失败！')
+        return
+      }
+      this.captcha = res.data.captcha
+    },
     // 点击重置按钮
     resetLoginForm() {
       this.$refs.loginFormRef.resetFields();
@@ -64,9 +90,13 @@ export default {
     async login() {
       this.$refs.loginFormRef.validate(async valid => {
         if (valid) {
+          console.log(this.loginForm)
           const { data: res } = await this.$http.post("/login", this.loginForm);
-          console.log(res)
-          if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+          if (res.meta.status !== 200) {
+            this.getCaptcha()
+            this.loginForm.captcha = ''
+            return this.$message.error(res.meta.msg);
+          }
           if (res.data.data.mg_state !== "1")
             return this.$message.error("当前用户不可用！请联系超级管理员！");
           if (res.data.data.role_name === "user") {
@@ -93,7 +123,7 @@ export default {
 }
 .login_box {
   width: 450px;
-  height: 300px;
+  height: 350px;
   background-color: #fff;
   border-radius: 10px;
 
