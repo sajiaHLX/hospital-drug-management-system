@@ -89,6 +89,7 @@
           {
             id:2,
             authName:"系统管理",
+            // isSuperUser: window.sessionStorage.getItem('role'),
             children:[
               {
                 id: 0,

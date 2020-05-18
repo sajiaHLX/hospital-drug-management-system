@@ -17,7 +17,7 @@ router.post('/login', function (req, res, next) {
     },
     data: {}
   }
-  if(Number(cap) !== captcha){
+  if (Number(cap) !== captcha) {
     data.meta.status = 500
     data.meta.msg = "验证码错误！"
     res.send(data)
@@ -33,15 +33,21 @@ router.post('/login', function (req, res, next) {
       res.send(data);
       return
     } else {
-      if(result.length == 0){
+      if (result.length == 0) {
         data.meta.status = 500
         data.meta.msg = "登陆失败！请检查用户名或密码是否正确！"
         res.send(data);
-      }else{
-        console.log(result)
-        data.meta.status = 200
-        data.data.data = result[0]
-        res.send(data);
+      } else {
+        console.log(result[0])
+        if (result[0].password === pwd) {
+          data.meta.status = 200
+          data.data.data = result[0]
+          res.send(data);
+        } else {
+          data.meta.status = 500
+          data.meta.msg = "登陆失败！请检查用户名或密码是否正确！"
+          res.send(data);
+        }
       }
     }
   });
@@ -51,8 +57,8 @@ router.post('/login', function (req, res, next) {
 
 // 验证码
 router.get('/captcha', function (req, res, next) {
-  let a = Math.floor(Math.random()*9)
-  let b = Math.floor(Math.random()*9)
+  let a = Math.floor(Math.random() * 9)
+  let b = Math.floor(Math.random() * 9)
   let data = {
     meta: {
       status: 200
