@@ -70,18 +70,17 @@ export default {
       }
     };
   },
-  beforeMount () {
-    this.getCaptcha()
-  },
   methods: {
     // 获取验证码
-    async getCaptcha(){
+    async getCaptcha() {
+      console.log("开始获取");
       const { data: res } = await this.$http.get("/captcha");
-      if(res.meta.status !== 200){
-        this.$message.error('获取验证码失败！')
-        return
+      if (res.meta.status !== 200) {
+        this.$message.error("获取验证码失败！");
+        return;
       }
-      this.captcha = res.data.captcha
+      this.captcha = res.data.captcha;
+      console.log("获取到了" + this.captcha);
     },
     // 点击重置按钮
     resetLoginForm() {
@@ -92,8 +91,8 @@ export default {
         if (valid) {
           const { data: res } = await this.$http.post("/login", this.loginForm);
           if (res.meta.status !== 200) {
-            this.getCaptcha()
-            this.loginForm.captcha = ''
+            this.getCaptcha();
+            this.loginForm.captcha = "";
             return this.$message.error(res.meta.msg);
           }
           if (res.data.data.mg_state !== "1")
@@ -109,9 +108,10 @@ export default {
           this.$router.push("/home");
         }
       });
-      // window.sessionStorage.setItem("isLogin", true);
-      // this.$router.push("/home");
     }
+  },
+  created () {
+    this.getCaptcha();
   }
 };
 </script>
