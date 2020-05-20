@@ -173,7 +173,6 @@ export default {
         this.$message("请输入内容");
       } else {
         const { data: res } = await this.$http.get(`roles/unit?unit=${unit}`);
-        console.log(res);
         if (res.meta.status === 500) {
           this.$message.error("请检查单位是否重复！");
         } else {
@@ -191,7 +190,6 @@ export default {
     // 删除单位
     async removeUnitById(id) {
       const { data: res } = await this.$http.delete(`roles/unit?id=${id}`);
-      console.log(res);
       if (res.meta.status === 500) {
         this.$message.error("请检查单位是否重复！");
       } else {
@@ -207,7 +205,6 @@ export default {
     // 删除供货公司
     async removeCompanyById(id) {
       const { data: res } = await this.$http.delete(`roles/company?id=${id}`);
-      console.log(res);
       if (res.meta.status === 500) {
         this.$message.error("请检查单位是否重复！");
       } else {
@@ -224,7 +221,6 @@ export default {
         const { data: res } = await this.$http.get(
           `roles/company?company=${company}`
         );
-        console.log(res);
         if (res.meta.status === 500) {
           this.$message.error("请检查供货商是否重复！");
         } else {

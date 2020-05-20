@@ -212,7 +212,6 @@ export default {
       });
       if (res.meta.status !== 200)
         return this.$message.error("获取药品列表失败！");
-      console.log(res.data);
       this.logList = res.data.users;
       this.logTotal = res.data.total;
     },

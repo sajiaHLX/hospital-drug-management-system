@@ -90,7 +90,6 @@ export default {
     async login() {
       this.$refs.loginFormRef.validate(async valid => {
         if (valid) {
-          console.log(this.loginForm)
           const { data: res } = await this.$http.post("/login", this.loginForm);
           if (res.meta.status !== 200) {
             this.getCaptcha()
