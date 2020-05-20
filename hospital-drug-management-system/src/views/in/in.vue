@@ -268,7 +268,7 @@ export default {
             user: "",
             date: ""
           };
-          return this.$message.error("更新用户失败！请检查药品编号是否重复");
+          return this.$message.error("更新失败！请检查药品编号是否重复");
         }
         this.addDialogVisible = false;
         this.getMedicineIn();

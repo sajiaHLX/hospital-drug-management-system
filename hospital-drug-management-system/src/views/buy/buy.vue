@@ -233,10 +233,8 @@ export default {
       const { data: res } = await this.$http.get("medicine/buy", {
         params: this.queryInfo
       });
-      // console.log(this.queryInfo)
       if (res.meta.status !== 200)
-        return this.$message.error("获取入库列表失败！");
-      // console.log(res.data)
+        return this.$message.error("获取采购列表失败！");
       this.total = res.data.total;
       this.medicineBuyList = res.data.buyList;
     },

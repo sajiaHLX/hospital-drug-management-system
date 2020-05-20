@@ -239,7 +239,7 @@ export default {
         this.addForm.name = res.data.users[0].name;
         this.addForm.unit = res.data.users[0].unit;
       } else {
-        this.$message.error("获取药品数据失败！请检查药品编号是否正确");
+        this.$message.error("获取药品数据失败！");
         this.addForm.name = "";
         this.addForm.unit = "";
       }
