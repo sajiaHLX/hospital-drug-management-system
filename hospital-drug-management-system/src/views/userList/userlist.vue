@@ -298,7 +298,7 @@ export default {
       // 当前选中角色的id
       selectRoleId: "",
       // 当前用户的角色
-      role: window.sessionStorage.getItem("role")
+      role: this.$store.state.role,
     };
   },
   methods: {
@@ -409,23 +409,6 @@ export default {
       this.$message.success("删除成功！");
       this.queryInfo.pagenum = 1;
       this.getUserList();
-      // this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
-      //   confirmButtonText: '确定',
-      //   cancelButtonText: '取消',
-      //   type: 'warning'
-      // }).then(() => {
-      //   this.$http.delete('users' + id).then((res) => {
-      //   })
-      //   this.$message({
-      //     type: 'success',
-      //     message: '删除成功!'
-      //   })
-      // }).catch(() => {
-      //   this.$message({
-      //     type: 'info',
-      //     message: '已取消删除'
-      //   })
-      // })
     },
     // 获取角色列表
     setRole(userInfo) {

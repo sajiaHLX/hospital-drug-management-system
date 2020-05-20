@@ -145,7 +145,7 @@ export default {
       selectunitId: "",
       unitList: [],
       companyList: [],
-      role: window.sessionStorage.getItem("super_user"),
+      role: this.$store.state.role,
       unit: "",
       company: ""
     };

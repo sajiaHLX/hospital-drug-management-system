@@ -196,7 +196,7 @@ export default {
       },
       // 是否折叠
       isCollapse: false,
-      isSuperUser: window.sessionStorage.getItem("role")
+      isSuperUser: this.$store.state.role,
     };
   },
   computed: {
@@ -206,8 +206,9 @@ export default {
   },
   methods: {
     logout() {
-      window.sessionStorage.removeItem("token");
-      window.sessionStorage.removeItem("role");
+      this.$store.commit('setIsLogin','false')
+      this.$store.commit('setRole','')
+      this.$store.commit('setUser','')
       this.$router.push("/login");
       this.$message("成功退出！");
     },
@@ -222,7 +223,7 @@ export default {
     }
   },
   created() {
-    // this.getMenuList()
+    this.getMenuList()
   }
 };
 </script>

@@ -51,8 +51,8 @@ export default {
     return {
       // 登录数据绑定
       loginForm: {
-        username: "hlxhlx",
-        password: "123456",
+        username: "",
+        password: "",
         captcha: ""
       },
       captcha: "",
@@ -73,14 +73,12 @@ export default {
   methods: {
     // 获取验证码
     async getCaptcha() {
-      console.log("开始获取");
       const { data: res } = await this.$http.get("/captcha");
       if (res.meta.status !== 200) {
         this.$message.error("获取验证码失败！");
         return;
       }
       this.captcha = res.data.captcha;
-      console.log("获取到了" + this.captcha);
     },
     // 点击重置按钮
     resetLoginForm() {
@@ -98,13 +96,15 @@ export default {
           if (res.data.data.mg_state !== "1")
             return this.$message.error("当前用户不可用！请联系超级管理员！");
           if (res.data.data.role_name === "user") {
-            window.sessionStorage.setItem("role", "user");
+            this.$store.commit('setRole','user');
           } else {
-            window.sessionStorage.setItem("role", "super_user");
+            this.$store.commit('setRole','super_user');
           }
           this.$message.success("登录成功！");
-          window.sessionStorage.setItem("isLogin", true);
-          window.sessionStorage.setItem("user", res.data.data.username);
+          this.$store.commit('setIsLogin','true');
+          console.log(this.$store.state.isLogin)
+          this.$store.commit('setUser',res.data.data.username);
+          console.log(this.$store.state.user)
           this.$router.push("/home");
         }
       });

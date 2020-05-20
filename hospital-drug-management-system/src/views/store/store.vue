@@ -245,7 +245,7 @@ export default {
 
       this.editForm.code = scope.row.code;
       this.editForm.name = scope.row.name;
-      this.editForm.user = window.sessionStorage.getItem('user');
+      this.editForm.user = this.$store.state.user;
       this.editForm.date = new Date();
       this.editDialogVisible = true;
     },
