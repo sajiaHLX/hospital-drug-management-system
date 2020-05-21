@@ -123,7 +123,7 @@ router.post('/in', function (req, res, next) {
   let pagesize = req.body.params.pagesize
   var connection = mysql.createConnection(sql_connect);
   connection.connect();
-  var sql = 'SELECT * FROM medicineIn';
+  var sql = 'SELECT * FROM medicinein';
   let data = {
     meta: {
       status: 200
@@ -181,7 +181,7 @@ router.put('/in', function (req, res, next) {
   let newMedicine = [code, name, number, unit, d_price, j_price]
   var connection = mysql.createConnection(sql_connect);
   connection.connect();
-  let sql = 'INSERT INTO medicineIn(code,name,number,unit,d_price,j_price,pay_price,user,data) VALUES(?,?,?,?,?,?,?,?,?)';
+  let sql = 'INSERT INTO medicinein(code,name,number,unit,d_price,j_price,pay_price,user,data) VALUES(?,?,?,?,?,?,?,?,?)';
   let sql1 = `SELECT * FROM medicine WHERE code = ${code}`;
   let sql2 = ''
   let data = {
@@ -263,7 +263,7 @@ router.post('/out', function (req, res, next) {
   let pagesize = req.body.params.pagesize
   var connection = mysql.createConnection(sql_connect);
   connection.connect();
-  var sql = 'SELECT * FROM medicineOut';
+  var sql = 'SELECT * FROM medicineout';
   let data = {
     meta: {
       status: 200
@@ -314,7 +314,7 @@ router.put('/out', function (req, res, next) {
   let number = req.body.number
   var connection = mysql.createConnection(sql_connect);
   connection.connect();
-  let sql = 'INSERT INTO medicineOut(code,name,number,unit,pl_price,pd_price,user,data) VALUES(?,?,?,?,?,?,?,?)';
+  let sql = 'INSERT INTO medicineout(code,name,number,unit,pl_price,pd_price,user,data) VALUES(?,?,?,?,?,?,?,?)';
   let sql1 = `SELECT * FROM medicine WHERE code = ${code}`;
   let sql2 = ''
   let data = {
@@ -430,10 +430,11 @@ router.get('/buy', function (req, res, next) {
   }
   var connection = mysql.createConnection(sql_connect);
   connection.connect();
-  var sql = `SELECT * FROM medicineBuy`
+  var sql = `SELECT * FROM medicinebuy`
   if (query == '') {
     connection.query(sql, function (err, result) {
       if (err) {
+        console.log(err)
         data.meta.status = 500
         res.send(data)
       } else {
@@ -474,7 +475,7 @@ router.post('/buy', function (req, res, next) {
   var connection = mysql.createConnection(sql_connect);
   console.log(req.body)
   connection.connect();
-  let sql = `UPDATE medicineBuy SET handle = '${req.body.handle}' WHERE id = ${id}`;
+  let sql = `UPDATE medicinebuy SET handle = '${req.body.handle}' WHERE id = ${id}`;
   let addForm = []
   for (const iterator of Object.values(req.body)) {
     addForm.push(iterator)
@@ -505,7 +506,7 @@ router.put('/buy', function (req, res, next) {
   }
   var connection = mysql.createConnection(sql_connect);
   connection.connect();
-  let sql = `INSERT INTO medicineBuy(name,number,unit,manufacturers,order_unit,supply_unit,user,mobile,date,handle) VALUES(?,?,?,?,?,?,?,?,?,'未处理')`;
+  let sql = `INSERT INTO medicinebuy(name,number,unit,manufacturers,order_unit,supply_unit,user,mobile,date,handle) VALUES(?,?,?,?,?,?,?,?,?,'未处理')`;
   let addForm = []
   console.log(req.body)
   for (const iterator of Object.values(req.body)) {
