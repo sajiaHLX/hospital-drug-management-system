@@ -38,10 +38,21 @@ router.post('/login', function (req, res, next) {
         data.meta.msg = "登陆失败！请检查用户名或密码是否正确！"
         res.send(data);
       } else {
-        console.log(result[0])
+        console.log(result[0]);
         if (result[0].password === pwd) {
-          data.meta.status = 200
-          data.data.data = result[0]
+          data.meta.status = 200;
+          data.data.data = result[0];
+          var sql1 = `INSERT INTO loginlog(username,date) VALUES(?,?)`;
+          var date = new Date();
+          connection.query(sql1, [name, date], function (err, result) {
+            if (err) {
+              console.log('[SELECT ERROR] - ', err.message);
+            } else {
+              if(result.length !== 0){
+                console.log('添加成功');
+              }
+            }
+          });
           res.send(data);
         } else {
           data.meta.status = 500
@@ -51,8 +62,6 @@ router.post('/login', function (req, res, next) {
       }
     }
   });
-
-  connection.end();
 })
 
 // 验证码
