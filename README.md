@@ -1,5 +1,10 @@
 # hospital-drug-management-system（医院后台管理系统）
 
+前端：vue，elementui，axios，vuex，
+后端：nodejs，express，
+服务器：腾讯云，nginx，pm2，
+数据库：mysql
+
 ## 前端
 
 - 刘致远
