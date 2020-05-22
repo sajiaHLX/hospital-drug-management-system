@@ -23,6 +23,7 @@
       <!-- 用户列表区域 -->
       <el-table border stripe :data="medicineBuyList">
         <el-table-column type="index" label="#"></el-table-column>
+        <el-table-column prop="code" label="药品编号"></el-table-column>
         <el-table-column prop="name" label="药品名称"></el-table-column>
         <el-table-column prop="number" label="数量"></el-table-column>
         <el-table-column prop="unit" label="单位"></el-table-column>
@@ -61,6 +62,9 @@
       <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="80px">
         <el-form-item label="药品名称" prop="name">
           <el-input v-model="addForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="药品编号" prop="code">
+          <el-input v-model="addForm.code"></el-input>
         </el-form-item>
         <el-form-item label="数量" prop="number">
           <el-input v-model.number="addForm.number"></el-input>
@@ -147,7 +151,8 @@ export default {
         supply_unit: "",
         user: "",
         mobile: "",
-        date: ""
+        date: "",
+        code: "",
       },
       // 药品入库表单的验证规则对象
       addFormRules: {
@@ -265,7 +270,6 @@ export default {
     saveMedicineInfo() {
       this.$refs.addFormRef.validate(async valid => {
         if (!valid) return null;
-        // console.log(this.addForm)
         const { data: res } = await this.$http.put(
           "medicine/buy",
           this.addForm
@@ -278,6 +282,7 @@ export default {
       });
     },
     async handleClick(scope) {
+      console.log(scope)
       let handle = {
         id: scope.row.id,
         handle: "已处理"

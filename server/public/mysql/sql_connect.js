@@ -1,7 +1,7 @@
 var sql_connect = {
-  host: 'localhost',
+  host: 'sajiahlx.xyz',
   user: 'root',
-  password: '1234qwer',
+  password: '1234Qwer.',
   port: '3306',
   database: 'medicine'
 }

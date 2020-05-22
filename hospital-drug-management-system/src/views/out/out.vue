@@ -25,7 +25,7 @@
         <el-table-column type="index" label="#"></el-table-column>
         <el-table-column prop="code" label="药品编号"></el-table-column>
         <el-table-column prop="name" label="药品名称"></el-table-column>
-        <el-table-column prop="number" label="入库数量"></el-table-column>
+        <el-table-column prop="number" label="出库数量"></el-table-column>
         <el-table-column prop="unit" label="单位"></el-table-column>
         <el-table-column prop="pl_price" label="批发零售价"></el-table-column>
         <el-table-column prop="pd_price" label="批发单价"></el-table-column>
@@ -56,8 +56,8 @@
         <el-form-item label="数量" prop="number">
           <el-input v-model.number="addForm.number"></el-input>
         </el-form-item>
-        <el-form-item :disabled="true" label="单位" prop="unit">
-          <el-input v-model="addForm.unit"></el-input>
+        <el-form-item label="单位" prop="unit">
+          <el-input v-model="addForm.unit" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="批发零售价" prop="pj_price">
           <el-input v-model.number="addForm.pl_price"></el-input>

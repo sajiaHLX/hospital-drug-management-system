@@ -223,7 +223,7 @@ export default {
     }
   },
   created() {
-    this.getMenuList()
+    // this.getMenuList()
   }
 };
 </script>

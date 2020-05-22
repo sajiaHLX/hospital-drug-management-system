@@ -107,7 +107,7 @@ export default {
       total: 0,
       addDialogVisible: false,
       addForm: {
-        code: "",
+        code: this.code,
         name: "",
         number: "",
         unit: "",
@@ -227,7 +227,8 @@ export default {
       });
       this.addForm.code = code;
       if (res.meta.status !== 200)
-        return this.$message.error("获取药品数据失败！");
+        // return this.$message.error("获取药品数据失败！");
+        return;
       if (res.data.users.length === 1) {
         this.addForm.name = res.data.users[0].name;
         this.addForm.unit = res.data.users[0].unit;

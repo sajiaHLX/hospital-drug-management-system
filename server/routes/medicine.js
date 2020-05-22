@@ -197,62 +197,78 @@ router.put('/in', function (req, res, next) {
   for (const iterator of Object.values(req.body)) {
     addForm.push(iterator)
   }
-  // 修改药品库存
-  new Promise((resolve, reject) => {
-    connection.query(sql1, function (err, result) {
-      if (err) {
-        console.log(err)
-        data.meta.status = 500
-        // res.send(data);
-        return;
-      } else {
-        if (result.length !== 0) {
-          oldNum = result[0].number
-          sql2 = `UPDATE medicine SET number = '${oldNum * 1 + number * 1}' WHERE code = ${code}`
-          resolve(sql2)
-        } else {
-          sql2 = 'INSERT INTO medicine(code,name,number,unit,d_price,j_price) VALUES(?,?,?,?,?,?)'
-          reject(sql2)
-        }
-      }
-    });
-  }).then((sql2) => {
-    connection.query(sql2, function (err, result) {
-      if (err) {
-        console.log(err)
-        data.meta.status = 500
-        return;
-      } else {
-        data.meta.status = 200
-        console.log("xiugaichenggong")
-      }
-    });
-  }, (sql2) => {
-    connection.query(sql2, newMedicine, function (err, result) {
-      if (err) {
-        console.log(err)
-        data.meta.status = 500
-        return;
-      } else {
-        data.meta.status = 200
-      }
-    });
-  })
-
-  // 插入药品入库单
-  connection.query(sql, addForm, function (err, result) {
+  let select = `SELECT * FROM medicinebuy WHERE code = ${code}`
+  console.log(select)
+  connection.query(select, function (err, result) {
     if (err) {
       console.log(err)
-      data.meta.status = 500
+      data.meta.status = 500;
       res.send(data);
       return;
     } else {
-      data.meta.status = 200
-      // data.data.total = result.length
-      // data.data.users = result.splice((pagenum - 1) * pagesize, pagesize)
-      res.send(data);
+      if (result.length !== 0) {
+        // 修改药品库存
+        new Promise((resolve, reject) => {
+          connection.query(sql1, function (err, result) {
+            if (err) {
+              console.log(err)
+              data.meta.status = 500
+              // res.send(data);
+              return;
+            } else {
+              if (result.length !== 0) {
+                oldNum = result[0].number
+                sql2 = `UPDATE medicine SET number = '${oldNum * 1 + number * 1}' WHERE code = ${code}`
+                resolve(sql2)
+              } else {
+                sql2 = 'INSERT INTO medicine(code,name,number,unit,d_price,j_price) VALUES(?,?,?,?,?,?)'
+                reject(sql2)
+              }
+            }
+          });
+        }).then((sql2) => {
+          connection.query(sql2, function (err, result) {
+            if (err) {
+              console.log(err)
+              data.meta.status = 500
+              return;
+            } else {
+              data.meta.status = 200
+              console.log("xiugaichenggong")
+            }
+          });
+        }, (sql2) => {
+          connection.query(sql2, newMedicine, function (err, result) {
+            if (err) {
+              console.log(err)
+              data.meta.status = 500
+              return;
+            } else {
+              data.meta.status = 200
+            }
+          });
+        })
+        // 插入药品入库单
+        connection.query(sql, addForm, function (err, result) {
+          if (err) {
+            console.log(err)
+            data.meta.status = 500
+            res.send(data);
+            return;
+          } else {
+            data.meta.status = 200
+            // data.data.total = result.length
+            // data.data.users = result.splice((pagenum - 1) * pagesize, pagesize)
+            res.send(data);
+          }
+        });
+      } else {
+        data.meta.status = 500;
+        res.send(data);
+        return;
+      }
     }
-  });
+  })
   // connection.end();
 })
 
@@ -461,7 +477,7 @@ router.get('/buy', function (req, res, next) {
   }
 })
 
-// 更新药品库存
+// 更新药品采购状态
 router.post('/buy', function (req, res, next) {
   let data = {
     meta: {
@@ -494,7 +510,7 @@ router.post('/buy', function (req, res, next) {
   // connection.end();
 })
 
-// 修改药品库存
+// 添加药品采购
 router.put('/buy', function (req, res, next) {
   let data = {
     meta: {
@@ -504,11 +520,11 @@ router.put('/buy', function (req, res, next) {
       total: 0
     }
   }
+  let addForm = [];
   var connection = mysql.createConnection(sql_connect);
   connection.connect();
-  let sql = `INSERT INTO medicinebuy(name,number,unit,manufacturers,order_unit,supply_unit,user,mobile,date,handle) VALUES(?,?,?,?,?,?,?,?,?,'未处理')`;
-  let addForm = []
-  console.log(req.body)
+  let sql = `INSERT INTO medicinebuy(name,number,unit,manufacturers,order_unit,supply_unit,user,mobile,date,code,handle) VALUES(?,?,?,?,?,?,?,?,?,?,'未处理')`;
+  console.log(req.body);
   for (const iterator of Object.values(req.body)) {
     addForm.push(iterator)
   }
@@ -524,7 +540,7 @@ router.put('/buy', function (req, res, next) {
     }
   });
 
-  // connection.end();
+  connection.end();
 })
 
 // 数据错误时修改药品库存
